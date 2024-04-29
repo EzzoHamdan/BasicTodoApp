@@ -3,6 +3,7 @@ import "./App.css";
 
 function App() {
   const [todo, setTodo] = useState<string[]>([]);
+  const [error, setError] = useState('');
 
   const todoText = useRef<HTMLInputElement>(null);
 
@@ -15,11 +16,18 @@ function App() {
 
   function addTodo(event: React.FormEvent) {
     event.preventDefault();
-    if (todoText.current?.value) {
+    if (todoText.current?.value && todoText.current.value.trim() !== "") {
+      setError('');
+
       const newTodo = [...todo, todoText.current.value];
       setTodo(newTodo);
       localStorage.setItem("todo", JSON.stringify(newTodo));
       todoText.current.value = "";
+    }
+    else{
+
+      setError('Please enter a valid todo!');
+
     }
   }
 
@@ -33,11 +41,15 @@ function App() {
 
   function editTodo(index: number) {
     const toBeEditedTodo = [...todo];
-    if (todoText.current?.value) {
+    if (todoText.current?.value && todoText.current.value.trim() !== "") {
+      setError('');
       toBeEditedTodo[index] = todoText.current.value;
       setTodo(toBeEditedTodo);
       localStorage.setItem("todo", JSON.stringify(toBeEditedTodo));
       todoText.current.value = "";
+    }
+    else{
+      setError('Please enter a valid todo!');
     }
   }
 
@@ -57,9 +69,9 @@ function App() {
   return (
     <>
       <Header />
-      <div className="relative h-screen">
+      <div className="relative h-screen overflow-hidden">
         <video
-          className="absolute inset-0 object-cover w-full h-full z-0"
+          className="absolute scale-[1.05] object-cover inset-0 w-full h-full blur-sm z-0"
           src={backgroundVideo}
           autoPlay
           loop
@@ -74,7 +86,7 @@ function App() {
                   key={todo}
                   className="flex items-center justify-between bg-gray-700 rounded-lg px-4 py-2"
                 >
-                  <span className="text-white">{todo}</span>
+                  <span className="text-white text-justify pr-3">{todo}</span>
                   <div className="flex">
                     <button
                       className="mr-2 px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
@@ -106,6 +118,11 @@ function App() {
                 Add Todo
               </button>
             </form>
+
+            <div className="m-auto pt-5 text-center text-red-500">
+              {error && <p>{error}</p>}
+            </div>
+
           </div>
         </div>
       </div>
