@@ -4,6 +4,7 @@ import "./App.css";
 function App() {
   const [todo, setTodo] = useState<string[]>([]);
   const [error, setError] = useState('');
+  const [showFullTodoIndex, setShowFullTodoIndex] = useState<number | null>(null);
 
   const todoText = useRef<HTMLInputElement>(null);
 
@@ -23,11 +24,8 @@ function App() {
       setTodo(newTodo);
       localStorage.setItem("todo", JSON.stringify(newTodo));
       todoText.current.value = "";
-    }
-    else{
-
+    } else {
       setError('Please enter a valid todo!');
-
     }
   }
 
@@ -47,10 +45,18 @@ function App() {
       setTodo(toBeEditedTodo);
       localStorage.setItem("todo", JSON.stringify(toBeEditedTodo));
       todoText.current.value = "";
-    }
-    else{
+    } else {
       setError('Please enter a valid todo!');
     }
+  }
+
+  function ShowTodo(index: number) {
+    if (showFullTodoIndex === index) {
+      setShowFullTodoIndex(null);
+    } else {
+      setShowFullTodoIndex(index);
+    }
+    //setShowFullTodoIndex(index === showFullTodoIndex ? null : index);
   }
 
   function Header() {
@@ -79,15 +85,29 @@ function App() {
         />
 
         <div className="flex justify-center items-center h-screen">
-          <div className="mx-auto max-w-md p-6 bg-gray-800 rounded-lg shadow-lg relative">
+          <div className="mx-auto max-w-md p-6 bg-gray-800 rounded-lg text-justify shadow-lg relative">
             <ul className="space-y-2">
-              {todo.map((todo, index) => (
+              {todo.map((todoItem, index) => (
                 <li
-                  key={todo}
+                  key={index}
                   className="flex items-center justify-between bg-gray-700 rounded-lg px-4 py-2"
                 >
-                  <span className="text-white text-justify pr-3">{todo}</span>
+                  <span className="text-white pr-3">
+                    {showFullTodoIndex === index
+                      ? todoItem
+                      : todoItem.length > 25
+                      ? todoItem.slice(0, 25) + "..."
+                      : todoItem}
+                  </span>
                   <div className="flex">
+                  {todoItem.length > 25 && (
+                      <button
+                        className="mr-2 px-2 py-1 bg-yellow-600 text-white rounded hover:bg-yellow-700"
+                        onClick={() => ShowTodo(index)}
+                      >
+                        {showFullTodoIndex === index ? "-" : "+"}
+                      </button>
+                    )}
                     <button
                       className="mr-2 px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
                       onClick={() => editTodo(index)}
@@ -100,6 +120,7 @@ function App() {
                     >
                       Delete
                     </button>
+
                   </div>
                 </li>
               ))}
