@@ -65,19 +65,19 @@ function App() {
     }
     //setShowFullTodoIndex(index === showFullTodoIndex ? null : index);
   }
-
+/*
   function Header() {
     return (
       <div className="bg-gray-800 bg-opacity-50 text-white text-center p-4 absolute inset-x-0 top-0 z-10">
         <h6 className="text-sm ">
           I extend my heartfelt thoughts to everyone enduring hardships,
-          especially to the communities in Palestine and Ukraine, and I stand in
+          especially to the communities in Palestine, and I stand in
           solidarity with their hope for peace and well-being. Your strength is
           admired.
         </h6>
       </div>
     );
-  }
+  }*/
   function BackgroundVideo() {
     return (
       <video
@@ -157,7 +157,6 @@ function App() {
   return (
     <>
     
-      <Header />
       <div className="relative h-screen overflow-hidden">
 
         {BackgroundVideo()}
